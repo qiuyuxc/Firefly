@@ -7,70 +7,105 @@ import {
 } from "../types/config";
 import { siteConfig } from "./siteConfig";
 
-// 根据页面开关动态生成导航栏配置
 const getDynamicNavBarConfig = (): NavBarConfig => {
-	// 基础导航栏链接
 	const links: (NavBarLink | LinkPreset)[] = [
-		// 主页
+		// 主页 & 归档
 		LinkPreset.Home,
-
-		// 归档
 		LinkPreset.Archive,
 	];
 
-	// 自定义导航栏链接,并且支持多级菜单
+	// ===== Links（原 Links 菜单）=====
 	links.push({
-		name: "链接",
+		name: "Links",
 		url: "/links/",
 		icon: "material-symbols:link",
-
-		// 子菜单
 		children: [
 			{
 				name: "GitHub",
-				url: "https://github.com/CuteLeaf/Firefly",
+				url: "https://github.com/qiuyuxc/Mizuki",
 				external: true,
 				icon: "fa6-brands:github",
 			},
 			{
 				name: "Bilibili",
-				url: "https://space.bilibili.com/38932988",
+				url: "https://space.bilibili.com/1366400407",
 				external: true,
 				icon: "fa6-brands:bilibili",
+			},
+			{
+				name: "Gitee",
+				url: "https://gitee.com/matsuzakayuki/Mizuki",
+				external: false,
+				icon: "mdi:git",
 			},
 		],
 	});
 
-	// 友链
+	// ===== My =====
+	links.push({
+		name: "我的",
+		url: "/content/",
+		icon: "material-symbols:person",
+		children: [
+			{
+				name: "图床",
+				url: "https://im.quiyu.cn",
+				external: true,
+				icon: "material-symbols:cloud-outline",
+			},
+		],
+	});
+
+	// ===== Friends（保留 preset）=====
 	links.push(LinkPreset.Friends);
 
-	// 根据配置决定是否添加留言板，在siteConfig关闭pages.guestbook时导航栏不显示留言板
-	if (siteConfig.pages.guestbook) {
-		links.push(LinkPreset.Guestbook);
-	}
-
-	// 关于及其子菜单
+	// ===== 关于 =====
 	links.push({
 		name: "关于",
 		url: "/content/",
 		icon: "material-symbols:info",
 		children: [
-			// 根据配置决定是否添加赞助，在siteConfig关闭pages.sponsor时导航栏不显示赞助
-			...(siteConfig.pages.sponsor ? [LinkPreset.Sponsor] : []),
-
-			// 关于页面
 			LinkPreset.About,
-
-			// 根据配置决定是否添加番组计划，在siteConfig关闭pages.bangumi时导航栏不显示番组计划
-			...(siteConfig.pages.bangumi ? [LinkPreset.Bangumi] : []),
+			LinkPreset.Friends,
 		],
 	});
 
-	// 仅返回链接，其它导航搜索相关配置在模块顶层常量中独立导出
+	// ===== Others =====
+	links.push({
+		name: "其他",
+		url: "#",
+		icon: "material-symbols:more-horiz",
+		children: [
+			{
+				name: "站点状态",
+				url: "https://star.quiyu.cn",
+				external: true,
+				icon: "material-symbols:vital-signs",
+			},
+			{
+				name: "Umami",
+				url: "https://cloud.umami.is/share/n1v9LfSuJEOe7HoO",
+				external: true,
+				icon: "material-symbols:bar-chart",
+			},
+			{
+				name: "EdgeOne 监控大屏",
+				url: "https://nmer.quiyu.cn/",
+				external: true,
+				icon: "material-symbols:dashboard-outline",
+			},
+		],
+	});
+
+	// ===== 可选页面（保持你之前那套开关逻辑）=====
+	if (siteConfig.pages.guestbook) {
+		links.push(LinkPreset.Guestbook);
+	}
+
 	return { links } as NavBarConfig;
 };
 
-// 导航搜索配置
+// 搜索配置（不动）
 export const navBarSearchConfig: NavBarSearchConfig = {
 	method: NavBarSearchMethod.PageFind,
 };
